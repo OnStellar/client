@@ -1,1 +1,1 @@
-# client
+<h1 align="center">OnStellar Client</h1>
