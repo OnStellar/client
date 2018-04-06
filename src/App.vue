@@ -1,28 +1,15 @@
 <template>
     <div id="app">
         <Navbar/>
-        <div class="d-flex justify-content-center align-items-center flex-wrap">
-            <Post/>
-            <Post/>
-            <Post/>
-            <Post/>
-            <Post/>
-            <Post/>
-            <Post/>
-            <Post/>
-        </div>
+        <router-view class="view"></router-view>
     </div>
 </template>
 <script>
 import Navbar from './components/Navbar.vue'
-import Post from './components/Post.vue'
 
 export default {
     name: 'app',
-    components: {
-        Navbar,
-        Post
-    }
+    components: { Navbar }
 }
 </script>
 <style lang="stylus">
@@ -36,4 +23,13 @@ body
 
 #app
     font-family 'Raleway', sans-serif
+    .view
+        margin-top 4rem
+    .back_btn
+        background-color transparent
+        color #fff
+        border 0
+        font-size 1.5rem
+        cursor pointer
+        outline 0
 </style>

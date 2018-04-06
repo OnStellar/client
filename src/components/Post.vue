@@ -1,22 +1,22 @@
 <template>
     <div class="onstellar_post">
         <div class="onstellar_post_header">
-            <div class="post_type">OnStellar</div>
+            <div class="post_type">{{ channel }}</div>
             <div class="post_author d-flex align-items-center">
                 <i class="fas fa-user-circle"></i>
-                <a
+                <router-link
                     class="post_author_link ml-3 mr-1"
-                    href="javascript:void(0);"
-                >@jeff</a><i class="far fa-check-circle"></i>
+                    :to="'/@' + author"
+                >@{{ author }}</router-link><i v-if="verified" class="far fa-check-circle"></i>
             </div>
             <div class="post_data d-flex flex-row align-items-center justify-content-between">
                 <div class="post_time">
                     <i class="far fa-clock"></i>
-                    <span>55 minutes</span>
+                    <span>{{ timePosted }}</span>
                 </div>
                 <div class="post_views">
                     <i class="fas fa-eye"></i>
-                    <span>999M</span>
+                    <span>{{ views }}</span>
                 </div>
                 <button type="button" class="post_btn">
                     <i class="fas fa-share-alt"></i>
@@ -28,23 +28,24 @@
         </div>
         <div class="onstellar_post_body">
             <img
-                src="@/assets/images/ink-water-lg.jpg"
-                class="img-fluid post_photo"
+                :src="postPhoto"
+                class="post_photo"
                 alt="Featured Photo"
+                @click="navigatePost(buildPostURL())"
             >
             <div class="content">
-                <strong class="post_title">Ink In Water</strong>
-                <p class="post_category">Metamorphosis</p>
+                <strong class="post_title">{{ postTitle }}</strong>
+                <p class="post_category">{{ postCategory }}</p>
             </div>
         </div>
         <div class="onstellar_post_footer d-flex flex-row align-items-center justify-content-between">
             <div class="post_tokens d-flex flex-row align-items-center">
                 <i class="fas fa-angle-up"></i>
-                <span class="ml-2">$55555.55</span>
+                <span class="ml-2">${{ tokens.toFixed(2) }}</span>
             </div>
             <div class="post_comments d-flex flex-row align-items-center">
                 <i class="fas fa-comment"></i>
-                <span class="ml-2">555M</span>
+                <span class="ml-2">{{ comments }}</span>
             </div>
             <div class="post_broadcast">
                 <button type="button" class="post_btn">
@@ -54,6 +55,71 @@
         </div>
     </div>
 </template>
+<script>
+export default {
+    props: {
+        id: {
+            type: [String, Number],
+            required: true
+        },
+        author: {
+            type: String,
+            required: true
+        },
+        verified: {
+            type: Boolean,
+            required: true
+        },
+        channel: {
+            type: String,
+            required: true
+        },
+        timePosted: {
+            type: String,
+            required: true
+        },
+        views: {
+            type: [String, Number],
+            required: true
+        },
+        postPhoto: {
+            type: String,
+            required: true
+        },
+        postTitle: {
+            type: String,
+            required: true
+        },
+        postCategory: {
+            type: String,
+            required: true
+        },
+        tokens: {
+            type: [String, Number],
+            required: true
+        },
+        comments: {
+            type: [String, Number],
+            required: true
+        }
+    },
+    methods: {
+        navigatePost(route) {
+            this.$router.push(route);
+        },
+        buildPostURL() {
+            let urlString = '/';
+            urlString += this.postCategory.toLowerCase() + '/';
+            urlString += '@' + this.author + '/';
+            urlString += this.spinalCase(this.postTitle)
+            return urlString;
+        },
+        spinalCase(text) {
+            return typeof text === 'string' ? text.replace(/\s/g, '-').toLowerCase() : text;
+        }
+    }
+}
+</script>
 <style lang="stylus" scoped>
 $teal-color = rgb(11, 197, 182)
 $menu-background-color = rgb(19, 19, 19)
@@ -125,6 +191,11 @@ $lg-screen = 992px
                     margin-left 0.5rem
                     color #fff
     .onstellar_post_body
+        &:hover
+            cursor pointer
+        .post_photo
+            height 250px
+            width 100%
         .content
             margin 1rem
             .post_title
@@ -140,10 +211,14 @@ $lg-screen = 992px
         .post_tokens,
         .post_comments
             padding 1rem
-@media screen and (max-width: 798px)
+@media screen and (max-width: 992px)
     .onstellar_post
         width 100%
         border-radius 0
+        .onstellar_post_body
+            .post_photo
+                height auto
+                width 100%
         .onstellar_post_footer
             border-bottom-left-radius 0
             border-bottom-right-radius 0
